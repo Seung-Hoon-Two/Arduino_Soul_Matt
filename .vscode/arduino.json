@@ -2,5 +2,6 @@
     "configuration": "cpu=atmega328",
     "board": "arduino:avr:nano",
     "sketch": "Soul_Matt.ino",
-    "port": "/dev/tty.usbserial-1310"
+    "port": "/dev/tty.usbserial-1310",
+    "programmer": "arduino:avrisp"
 }
