@@ -1,31 +1,34 @@
-#include <SoftwareSerial.h>
+//https://github.com/espressif/arduino-esp32/blob/master/libraries/BluetoothSerial/examples/SerialToSerialBT/SerialToSerialBT.ino
+//This example code is in the Public Domain (or CC0 licensed, at your option.)
+//By Evandro Copercini - 2018
+//
+//This example creates a bridge between Serial and Classical Bluetooth (SPP)
+//and also demonstrate that SerialBT have the same functionalities of a normal Serial
 
-//블루투스모듈 HC-06(슬래이브만가능)으로 진행함 
-//블루투스모듈 HC-05(슬래이브 마스터둘다가능)는 조금 코드가 다르다  
-//HC-06 시리얼창에서 "line ending 없음" 설정할것
+#include "BluetoothSerial.h"
 
-int Tx = 2; //전송 보내는핀  
-int Rx = 3; //수신 받는핀
+#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+#endif
 
-SoftwareSerial BtSerial(Tx,Rx);
+BluetoothSerial SerialBT;
 
-void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(9600);
-
-  Serial.println("hello");
-  BtSerial.begin(9600);
-  
+void setup()
+{
+  Serial.begin(115200);
+  SerialBT.begin("ESP32_CLASSIC_BT"); //Bluetooth device name
+  Serial.println("The device started, now you can pair it with bluetooth!");
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  if (BtSerial.available()) {       
-    Serial.write(BtSerial.read());
+void loop()
+{
+  if (Serial.available())
+  {
+    SerialBT.write(Serial.read());
   }
-  if (Serial.available()) {         
-    BtSerial.write(Serial.read());
+  if (SerialBT.available())
+  {
+    Serial.write(SerialBT.read());
   }
-
-
+  delay(20);
 }
